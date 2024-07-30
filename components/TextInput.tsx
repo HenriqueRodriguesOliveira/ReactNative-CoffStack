@@ -1,19 +1,24 @@
-import React from 'react';
-import { TextInputProps, TextInput as RNTextInput, StyleSheet } from 'react-native';
+import React from "react";
+import { TextInputProps, TextInput as RNTextInput, StyleSheet } from "react-native";
 
 type Props = TextInputProps;
 
-export function TextInput({ style, ...props }: Props) {
+export function TextInput(props: Props) {
     return (
-        <RNTextInput style={[styles.wrapper, style]} {...props} />
-    );
+        <RNTextInput
+            placeholderTextColor="#ddd"
+            style={styles.textInput}
+            {...props}
+        />
+    )
 }
 
 const styles = StyleSheet.create({
-    wrapper: {
-        width: 250,
-        padding: 5,
+    textInput: {
         borderWidth: 1,
-        borderColor: "#000"
-    }
+        width: 250,
+        marginTop: 10,
+        color: "#550ab1",
+        padding: 10,
+    },
 })
