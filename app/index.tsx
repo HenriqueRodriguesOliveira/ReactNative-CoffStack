@@ -1,21 +1,38 @@
-import { Button } from "@/components/Button";
-import { TextInput } from "@/components/TextInput";
+import React, { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
+import { Button } from "@/components/Button";
 
 export default function Index() {
-  function changeName(text: string) {
-    console.log(text)
+  console.log("rendered")
+
+  const [count, setCount] = useState(0);
+  const [showCount, setShowCount] = useState(true);
+
+
+  function increment() {
+    setCount(count + 1);
+    console.log(count);
   }
+
+  function decrement() {
+    setCount(count - 1);
+    console.log(count);
+  }
+
+  function toggleCount() {
+    setShowCount(!showCount);
+  }
+
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>React Native</Text>
-      <TextInput placeholder='Enter your e-mail' style={{ marginTop: 10 }} />
-      <TextInput placeholder='Enter your password' style={{ marginTop: 10 }} />
+      {showCount && <Text style={styles.text}>{count}</Text>}
 
-      <Button onPress={() => console.log("Clicou")} title={"Entrar"} style={{ marginTop: 10 }} />
-      <Button onPress={() => console.log("Clicou 2")} title={"Criar conta"} style={{ marginTop: 10 }} variant="secondary" />
+      <Button onPress={increment} title={"+ 1"} style={{ marginTop: 10 }} />
 
+      <Button onPress={decrement} title={"- 1"} style={{ marginTop: 10 }} />
+
+      <Button variant="secondary" title="show" onPress={toggleCount} />
     </View>
   );
 }
