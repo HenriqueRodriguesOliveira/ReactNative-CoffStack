@@ -10,18 +10,8 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>React Native</Text>
-      <TextInput
-        onChangeText={changeName}
-        placeholder="Digite seu e-mail"
-        placeholderTextColor="#ddd"
-      />
-
-      <TextInput
-        secureTextEntry
-        onChangeText={changeName}
-        placeholder="Digite a sua senha"
-        placeholderTextColor="#ddd"
-      />
+      <TextInput placeholder='Enter your e-mail' style={{ marginTop: 10 }} />
+      <TextInput placeholder='Enter your password' style={{ marginTop: 10 }} />
 
       <Button onPress={() => console.log("Clicou")} title={"Entrar"} style={{ marginTop: 10 }} />
       <Button onPress={() => console.log("Clicou 2")} title={"Criar conta"} style={{ marginTop: 10 }} variant="secondary" />
