@@ -1,38 +1,49 @@
+import { TextInput } from "@/components/TextInput";
 import React, { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { Button } from "@/components/Button";
 
 export default function Index() {
-  console.log("rendered")
+  const [formValues, setFormValues] = useState({
+    firstName: "",
+    lastName: "",
+    email: "henrique@example.com",
+    address: {
+      city: "",
+      country: ""
+    }
+  });
 
-  const [count, setCount] = useState(0);
-  const [showCount, setShowCount] = useState(true);
-
-
-  function increment() {
-    setCount(count + 1);
-    console.log(count);
+  function updateFirst(text: string) {
+    const updateValue = {
+      ...formValues,
+      firstName: text
+    };
+    setFormValues(updateValue);
   }
 
-  function decrement() {
-    setCount(count - 1);
-    console.log(count);
+  function updateLast(text: string) {
+    setFormValues({
+      ...formValues,
+      lastName: text,
+    })
   }
 
-  function toggleCount() {
-    setShowCount(!showCount);
+  function updateCity(text: string) {
+    setFormValues({
+      ...formValues,
+      address: {
+        ...formValues.address,
+        country: text,
+      }
+    })
   }
-
 
   return (
     <View style={styles.container}>
-      {showCount && <Text style={styles.text}>{count}</Text>}
-
-      <Button onPress={increment} title={"+ 1"} style={{ marginTop: 10 }} />
-
-      <Button onPress={decrement} title={"- 1"} style={{ marginTop: 10 }} />
-
-      <Button variant="secondary" title="show" onPress={toggleCount} />
+      <TextInput value={formValues.firstName} onChangeText={updateFirst} />
+      <TextInput value={formValues.lastName} onChangeText={updateLast} />
+      <TextInput value={formValues.address.city} onChangeText={updateCity} />
+      <Text style={styles.text}>{`${formValues.firstName} ${formValues.lastName} :\n ${formValues.email} \n ${formValues.address.city} - ${formValues.address.country}`}</Text>
     </View>
   );
 }
@@ -46,6 +57,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    fontSize: 30
+    fontSize: 30,
+    textAlign: "center"
   }
 });
