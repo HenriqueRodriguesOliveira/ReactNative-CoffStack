@@ -1,63 +1,110 @@
+import { useState, useEffect } from "react";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { TextInput } from "@/components/TextInput";
-import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Button } from "@/components/Button";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+async function getListFromApi(): Promise<string[]> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(["item 1", "item 2", "item 3"]);
+    }, 2000);
+  })
+}
 
 export default function Index() {
-  const [formValues, setFormValues] = useState({
-    firstName: "",
-    lastName: "",
-    email: "henrique@example.com",
-    address: {
-      city: "",
-      country: ""
+  const [text, setText] = useState("");
+  const [list, setList] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function getList() {
+    try {
+      const values = await getListFromApi();
+      setList(values);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  });
-
-  function updateFirst(text: string) {
-    const updateValue = {
-      ...formValues,
-      firstName: text
-    };
-    setFormValues(updateValue);
   }
 
-  function updateLast(text: string) {
-    setFormValues({
-      ...formValues,
-      lastName: text,
-    })
+  useEffect(() => {
+    getList();
+  }, []);
+
+  function addItem() {
+    setList((prev) => [...prev, text]);
   }
 
-  function updateCity(text: string) {
-    setFormValues({
-      ...formValues,
-      address: {
-        ...formValues.address,
-        country: text,
-      }
-    })
+  function removeItem(text: string) {
+    setList((prev) => prev.filter((item) => item !== text));
   }
+
 
   return (
-    <View style={styles.container}>
-      <TextInput value={formValues.firstName} onChangeText={updateFirst} />
-      <TextInput value={formValues.lastName} onChangeText={updateLast} />
-      <TextInput value={formValues.address.city} onChangeText={updateCity} />
-      <Text style={styles.text}>{`${formValues.firstName} ${formValues.lastName} :\n ${formValues.email} \n ${formValues.address.city} - ${formValues.address.country}`}</Text>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.input}>
+          <TextInput placeholder="add item" onChangeText={setText} />
+          <Button
+            title="+"
+            style={{ width: 50, marginLeft: 10 }}
+            onPress={addItem}
+          />
+        </View>
+        {loading ? (
+          <ActivityIndicator style={{ marginTop: 50 }} size="large" color="#550ab1" />
+        ) : (
+          list.map((item) => (
+            <View key={item} style={styles.item}>
+              <Text style={styles.text}>{item}</Text>
+              <TouchableOpacity style={styles.removeButton} onPress={() => removeItem(item)}>
+                <Text style={styles.textRemove}>x</Text>
+              </TouchableOpacity>
+            </View>
+          )))}
+
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
+  removeButton: {
+    backgroundColor: "#fff",
+    padding: 3,
+    borderRadius: 8,
+
+    alignItems: "center"
+  },
+  item: {
+    padding: 10,
+    marginTop: 10,
+    width: 350,
+    backgroundColor: "#550ab1",
+    borderRadius: 8,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  textRemove: {
+    padding: 10,
+    backgroundColor: "#FFF"
+  },
   container: {
     flex: 1,
     backgroundColor: "#FFF",
     alignItems: "center",
-    justifyContent: "center",
   },
   text: {
     fontWeight: "bold",
-    fontSize: 30,
-    textAlign: "center"
+    fontSize: 20,
+    color: "white",
+  },
+  input: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   }
 });
